@@ -1,4 +1,5 @@
-FROM openjdk:8u212-jre-alpine
+#FROM openjdk:8u212-jre-alpine
+FROM  arm32v7/openjdk:8u212-jre-alpine
 
 ARG kafka_version=2.3.0
 ARG scala_version=2.12
@@ -21,6 +22,12 @@ ENV KAFKA_VERSION=$kafka_version \
     GLIBC_VERSION=$glibc_version
 
 ENV PATH=${PATH}:${KAFKA_HOME}/bin
+
+# ToDo: remove of add apk in seperated layers, because of trouble on installing, internet connection???
+RUN apk add --no-cache curl
+RUN apk add --no-cache bash
+RUN apk add --no-cache docker
+RUN apk add --no-cache jq
 
 COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp/
 
